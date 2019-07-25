@@ -218,7 +218,7 @@ Window &Window::resize(Rect rect) {
 
 Window &Window::size(Size size) {
   auto &buffer = *(new cv::Mat(cv::Size(size.width, size.height), CV_8UC3,
-                               color2scalar(Gray)));
+                               color2scalar(Color_Gray)));
   if (buffer_ != NULL) {
     auto &current = *(cv::Mat *)buffer_;
     if (current.cols > 0 && current.rows > 0 && size.width > 0 &&
@@ -292,13 +292,13 @@ void Window::flush() {
       if (show_cursor_) {
         b->copyTo(mat);
         cv::line(mat, {cursor_.x - 4, cursor_.y + 1},
-                 {cursor_.x + 6, cursor_.y + 1}, color2scalar(White), 1);
+                 {cursor_.x + 6, cursor_.y + 1}, color2scalar(Color_White), 1);
         cv::line(mat, {cursor_.x + 1, cursor_.y - 4},
-                 {cursor_.x + 1, cursor_.y + 6}, color2scalar(White), 1);
+                 {cursor_.x + 1, cursor_.y + 6}, color2scalar(Color_White), 1);
         cv::line(mat, {cursor_.x - 5, cursor_.y}, {cursor_.x + 5, cursor_.y},
-                 color2scalar(Black), 1);
+                 color2scalar(Color_Black), 1);
         cv::line(mat, {cursor_.x, cursor_.y - 5}, {cursor_.x, cursor_.y + 5},
-                 color2scalar(Black), 1);
+                 color2scalar(Color_Black), 1);
         b = &mat;
       }
       cv::namedWindow(name_, cv::WINDOW_AUTOSIZE);

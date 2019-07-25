@@ -23,17 +23,17 @@ struct Point3 {
 };
 
 enum Type {
-  Line,
-  DotLine,
-  Dots,
-  FillLine,
-  RangeLine,
-  Histogram,
-  Vistogram,
-  Horizontal,
-  Vertical,
-  Range,
-  Circle,
+  FType_Line,
+  FType_DotLine,
+  FType_Dots,
+  FType_FillLine,
+  FType_RangeLine,
+  FType_Histogram,
+  FType_Vistogram,
+  FType_Horizontal,
+  FType_Vertical,
+  FType_Range,
+  FType_Circle,
 };
 
 class Series {
@@ -110,10 +110,10 @@ class Figure {
   Figure(View &view)
       : view_(view),
         border_size_(50),
-        background_color_(White),
-        axis_color_(Black),
-        sub_axis_color_(Light),
-        text_color_(Black),
+        background_color_(Color_White),
+        axis_color_(Color_Black),
+        sub_axis_color_(Color_Light),
+        text_color_(Color_Black),
         include_zero_x_(true),
         include_zero_y_(true),
         aspect_square_(false),

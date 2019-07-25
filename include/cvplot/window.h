@@ -36,9 +36,9 @@ class View {
         title_(title),
         rect_(0, 0, size.width, size.height),
         frameless_(false),
-        background_color_(Black),
-        frame_color_(Green),
-        text_color_(Black),
+        background_color_(Color_Black),
+        frame_color_(Color_Green),
+        text_color_(Color_Black),
         mouse_callback_(NULL),
         mouse_param_(NULL) {}
   View &resize(Rect rect);
@@ -60,7 +60,7 @@ class View {
   bool has(Offset offset);
 
   void drawRect(Rect rect, Color color);
-  void drawFill(Color background = White);
+  void drawFill(Color background = Color_White);
   void drawImage(const void *image, int alpha = 255);
   void drawText(const std::string &text, Offset offset, Color color) const;
   void drawFrame(const std::string &title) const;

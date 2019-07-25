@@ -14,23 +14,23 @@ void Series::verifyParams() const {
   auto dims = 1;
   auto depth = 0;
   switch (type_) {
-    case Line:
-    case DotLine:
-    case Dots:
-    case FillLine:
-    case Vistogram:
-    case Histogram:
-    case Horizontal:
-    case Vertical: {
+    case FType_Line:
+    case FType_DotLine:
+    case FType_Dots:
+    case FType_FillLine:
+    case FType_Vistogram:
+    case FType_Histogram:
+    case FType_Horizontal:
+    case FType_Vertical: {
       depth = 1;
       break;
     }
-    case RangeLine: {
+    case FType_RangeLine: {
       depth = 3;
       break;
     }
-    case Range:
-    case Circle: {
+    case FType_Range:
+    case FType_Circle: {
       depth = 2;
       break;
     }
@@ -254,11 +254,11 @@ bool Series::legend() const { return legend_; }
 Color Series::color() const { return color_; }
 
 bool Series::collides() const {
-  return type_ == Histogram || type_ == Vistogram;
+  return type_ == FType_Histogram || type_ == FType_Vistogram;
 }
 
 bool Series::flipAxis() const {
-  return type_ == Vertical || type_ == Vistogram;
+  return type_ == FType_Vertical || type_ == FType_Vistogram;
 }
 
 void Series::bounds(float &x_min, float &x_max, float &y_min, float &y_max,
@@ -266,7 +266,7 @@ void Series::bounds(float &x_min, float &x_max, float &y_min, float &y_max,
   for (const auto &e : entries_) {
     auto xe = e, xd = dims_, ye = e + dims_,
          yd = depth_ - (dynamic_color_ ? 1 : 0);
-    if (type_ == Circle) {
+    if (type_ == FType_Circle) {
       yd = 1;
     }
     if (flipAxis()) {
@@ -277,7 +277,7 @@ void Series::bounds(float &x_min, float &x_max, float &y_min, float &y_max,
       xd = yd;
       yd = s;
     }
-    if (type_ != Horizontal) {  // TODO: check Horizontal/Vertical logic
+    if (type_ != FType_Horizontal) {  // TODO: check Horizontal/Vertical logic
       EXPECT_EQ(xd, 1);
       const auto &x = data_[xe];
       if (x_min > x) {
@@ -287,7 +287,7 @@ void Series::bounds(float &x_min, float &x_max, float &y_min, float &y_max,
         x_max = x;
       }
     }
-    if (type_ != Vertical) {
+    if (type_ != FType_Vertical) {
       for (auto yi = ye, _y = yi + yd; yi != _y; yi++) {
         const auto &y = data_[yi];
         if (y_min > y) {
@@ -302,7 +302,7 @@ void Series::bounds(float &x_min, float &x_max, float &y_min, float &y_max,
   if (n_max < entries_.size()) {
     n_max = entries_.size();
   }
-  if (type_ == Histogram || type_ == Vistogram) {
+  if (type_ == FType_Histogram || type_ == FType_Vistogram) {
     p_max = std::max(30, p_max);
   }
 }
@@ -321,12 +321,12 @@ void Series::draw(void *b, float x_min, float x_max, float y_min, float y_max,
   Trans trans(*(cv::Mat *)b);
   auto color = color2scalar(color_);
   switch (type_) {
-    case Line:
-    case DotLine:
-    case Dots:
-    case FillLine:
-    case RangeLine: {
-      if (type_ == FillLine) {
+    case FType_Line:
+    case FType_DotLine:
+    case FType_Dots:
+    case FType_FillLine:
+    case FType_RangeLine: {
+      if (type_ == FType_FillLine) {
         bool has_last = false;
         float last_x, last_y;
         for (const auto &e : entries_) {
@@ -349,7 +349,7 @@ void Series::draw(void *b, float x_min, float x_max, float y_min, float y_max,
           }
           last_x = x, last_y = y;
         }
-      } else if (type_ == RangeLine) {
+      } else if (type_ == FType_RangeLine) {
         bool has_last = false;
         float last_x, last_y1, last_y2;
         for (const auto &e : entries_) {
@@ -382,8 +382,8 @@ void Series::draw(void *b, float x_min, float x_max, float y_min, float y_max,
         }
         cv::Point point((int)(x * xs + xd), (int)(y * ys + yd));
         if (has_last) {
-          if (type_ == DotLine || type_ == Line || type_ == FillLine ||
-              type_ == RangeLine) {
+          if (type_ == FType_DotLine || type_ == FType_Line || type_ == FType_FillLine ||
+              type_ == FType_RangeLine) {
             cv::line(trans.with(color_),
                      {(int)(last_x * xs + xd), (int)(last_y * ys + yd)}, point,
                      color, 1, cv::LINE_AA);
@@ -391,14 +391,14 @@ void Series::draw(void *b, float x_min, float x_max, float y_min, float y_max,
         } else {
           has_last = true;
         }
-        if (type_ == DotLine || type_ == Dots) {
+        if (type_ == FType_DotLine || type_ == FType_Dots) {
           cv::circle(trans.with(color_), point, 2, color, 1, cv::LINE_AA);
         }
         last_x = x, last_y = y;
       }
     } break;
-    case Vistogram:
-    case Histogram: {
+    case FType_Vistogram:
+    case FType_Histogram: {
       auto u = 2 * unit;
       auto o = (int)(2 * u * offset);
       for (const auto &e : entries_) {
@@ -406,12 +406,12 @@ void Series::draw(void *b, float x_min, float x_max, float y_min, float y_max,
         if (dynamic_color_) {
           color = color2scalar(Color::cos(data_[e + dims_ + 1]));
         }
-        if (type_ == Histogram) {
+        if (type_ == FType_Histogram) {
           cv::rectangle(trans.with(color_),
                         {(int)(x * xs + xd) - u + o, (int)(y_axis * ys + yd)},
                         {(int)(x * xs + xd) + u + o, (int)(y * ys + yd)}, color,
                         -1, cv::LINE_AA);
-        } else if (type_ == Vistogram) {
+        } else if (type_ == FType_Vistogram) {
           cv::rectangle(trans.with(color_),
                         {(int)(x_axis * xs + xd), (int)(x * ys + yd) - u + o},
                         {(int)(y * xs + xd), (int)(x * ys + yd) + u + o}, color,
@@ -420,25 +420,25 @@ void Series::draw(void *b, float x_min, float x_max, float y_min, float y_max,
       }
 
     } break;
-    case Horizontal:
-    case Vertical: {
+    case FType_Horizontal:
+    case FType_Vertical: {
       for (const auto &e : entries_) {
         auto y = data_[e + dims_];
         if (dynamic_color_) {
           color = color2scalar(Color::cos(data_[e + dims_ + 1]));
         }
-        if (type_ == Horizontal) {
+        if (type_ == FType_Horizontal) {
           cv::line(
               trans.with(color_), {(int)(x_min * xs + xd), (int)(y * ys + yd)},
               {(int)(x_max * xs + xd), (int)(y * ys + yd)}, color, 1, cv::LINE_AA);
-        } else if (type_ == Vertical) {
+        } else if (type_ == FType_Vertical) {
           cv::line(
               trans.with(color_), {(int)(y * xs + xd), (int)(y_min * ys + yd)},
               {(int)(y * xs + xd), (int)(y_max * ys + yd)}, color, 1, cv::LINE_AA);
         }
       }
     } break;
-    case Range: {
+    case FType_Range: {
       bool has_last = false;
       cv::Point last_a, last_b;
       for (const auto &e : entries_) {
@@ -457,7 +457,7 @@ void Series::draw(void *b, float x_min, float x_max, float y_min, float y_max,
         last_a = point_a, last_b = point_b;
       }
     } break;
-    case Circle: {
+    case FType_Circle: {
       for (const auto &e : entries_) {
         auto x = data_[e], y = data_[e + dims_], r = data_[e + dims_ + 1];
         if (dynamic_color_) {
@@ -537,7 +537,7 @@ Series &Figure::series(const std::string &label) {
       return s;
     }
   }
-  Series s(label, Line, Color::hash(label));
+  Series s(label, FType_Line, Color::hash(label));
   series_.push_back(s);
   return series_.back();
 }

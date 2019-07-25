@@ -26,23 +26,23 @@ struct Color {
   static Color uniq(const std::string &name);
 };
 
-static const Color Red = Color::hue(0.f);
-static const Color Orange = Color::hue(.5f);
-static const Color Yellow = Color::hue(1.f);
-static const Color Lawn = Color::hue(1.5f);
-static const Color Green = Color::hue(2.f);
-static const Color Aqua = Color::hue(2.5f);
-static const Color Cyan = Color::hue(3.f);
-static const Color Sky = Color::hue(3.5f);
-static const Color Blue = Color::hue(4.f);
-static const Color Purple = Color::hue(4.5f);
-static const Color Magenta = Color::hue(5.f);
-static const Color Pink = Color::hue(5.5f);
-static const Color Black = Color::gray(0);
-static const Color Dark = Color::gray(32);
-static const Color Gray = Color::gray(128);
-static const Color Light = Color::gray(223);
-static const Color White = Color::gray(255);
+static const Color Color_Red = Color::hue(0.f);
+static const Color Color_Orange = Color::hue(.5f);
+static const Color Color_Yellow = Color::hue(1.f);
+static const Color Color_Lawn = Color::hue(1.5f);
+static const Color Color_Green = Color::hue(2.f);
+static const Color Color_Aqua = Color::hue(2.5f);
+static const Color Color_Cyan = Color::hue(3.f);
+static const Color Color_Sky = Color::hue(3.5f);
+static const Color Color_Blue = Color::hue(4.f);
+static const Color Color_Purple = Color::hue(4.5f);
+static const Color Color_Magenta = Color::hue(5.f);
+static const Color Color_Pink = Color::hue(5.5f);
+static const Color Color_Black = Color::gray(0);
+static const Color Color_Dark = Color::gray(32);
+static const Color Color_Gray = Color::gray(128);
+static const Color Color_Light = Color::gray(223);
+static const Color Color_White = Color::gray(255);
 
 }  // namespace cvplot
 

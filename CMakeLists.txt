@@ -1,8 +1,8 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 3.13)
 
 project (cvplot)
 
-find_package(OpenCV REQUIRED)
+find_package(OpenCV REQUIRED PATHS "c:/src/opencv/build")
 
 include_directories(include)
 include_directories(${OpenCV_INCLUDE_DIRS})
