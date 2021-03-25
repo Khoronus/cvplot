@@ -1,6 +1,6 @@
 #include "cvplot/highgui.h"
 
-#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/opencv.hpp>
 
 namespace cvplot {
 
